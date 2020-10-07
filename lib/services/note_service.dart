@@ -5,8 +5,6 @@ import 'package:firstApp/models/note.dart';
 import 'package:firstApp/models/note_for_listing.dart';
 import 'package:http/http.dart' as http;
 
-// api-key: 8543c541-6273-4708-8a23-efc1a2087c1f
-
 class NoteService {
   static const API = 'http://api.notes.programmingaddict.com';
   static const headers = {
@@ -25,6 +23,7 @@ class NoteService {
 
         return APIResponse<List<NoteForListing>>(data: notes);
       } else {
+        print('error: '+ data.body);
         return APIResponse<List<NoteForListing>>(
             error: true, errorMessage: 'An error occurred');
       }
