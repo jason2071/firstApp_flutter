@@ -1,4 +1,5 @@
 import 'package:firstApp/models/api_response.dart';
+import 'package:firstApp/models/post_model.dart';
 import 'package:firstApp/models/posts_list_model.dart';
 import 'package:firstApp/services/post_service.dart';
 import 'package:firstApp/views/post_delete.dart';
@@ -43,7 +44,9 @@ class _PostListState extends State<PostList> {
         floatingActionButton: FloatingActionButton(
             child: Icon(Icons.add),
             onPressed: () {
-              Navigator.pushNamed(context, '/post-modify');
+              Navigator.pushNamed(context, '/post-modify').then((_) {
+                _fetchPosts();
+              });
             }),
         body: Builder(builder: (_) {
           if (_isLoading) {

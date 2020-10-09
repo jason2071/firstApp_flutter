@@ -1,3 +1,4 @@
+import 'package:firstApp/models/post_input_model.dart';
 import 'package:firstApp/models/post_model.dart';
 import 'package:firstApp/services/post_service.dart';
 import 'package:flutter/material.dart';
@@ -53,6 +54,45 @@ class _PostModifyState extends State<PostModify> {
     });
   }
 
+  void createPost() async {
+    setState(() {
+      _isLoading = true;
+    });
+    final post =
+        PostInput(title: _titleController.text, body: _contentController.text);
+
+    final result = await _postService.createPost(post);
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    final title = 'Done';
+    final text = result.error
+        ? (result.errorMessage ?? 'An error occurred')
+        : 'You post was created';
+
+    showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+              title: Text(title),
+              content: Text(text),
+              actions: [
+                FlatButton(
+                    onPressed: () {
+                      Navigator.pop(context, true);
+                    },
+                    child: Text('OK'))
+              ],
+            )).then((exit) {
+      if (exit == null) return;
+
+      if (exit) {
+        Navigator.of(context).pop();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,6 +117,7 @@ class _PostModifyState extends State<PostModify> {
                   TextField(
                     controller: _contentController,
                     decoration: InputDecoration(hintText: 'Content'),
+                    maxLines: 4,
                   ),
                   Container(
                     height: 8,
@@ -85,14 +126,14 @@ class _PostModifyState extends State<PostModify> {
                     width: double.infinity,
                     child: RaisedButton(
                       padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
                       onPressed: () {
                         if (isEditing) {
                           print('edit');
                         } else {
-                          print('create');
+                          createPost();
                         }
-
-                        Navigator.of(context).pop();
                       },
                       child: Text(
                         'Submit',
